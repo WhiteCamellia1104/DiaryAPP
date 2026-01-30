@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/addDiaryTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Diary"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:textColor="@android:color/black" />
+
+    <!-- Buttons for font customization -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/fontSizeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Font Size"
+            android:textColor="@android:color/white"
+            android:background="@android:color/black"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/fontColorButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Font Color"
+            android:textColor="@android:color/white"
+            android:background="@android:color/black"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/fontStyleButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Font Style"
+            android:textColor="@android:color/white"
+            android:background="@android:color/black"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <!-- EditText for title -->
+    <EditText
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Title"
+        android:gravity="center" />
+
+    <!-- Tag input and display section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <!-- Tag input field -->
+        <EditText
+            android:id="@+id/tagInputEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Add Tag"
+            android:inputType="text"/>
+
+        <!-- Add Tag button -->
+        <Button
+            android:id="@+id/addTagButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Tag"
+            android:background="@android:color/black"
+            android:textColor="@android:color/white"/>
+    </LinearLayout>
+
+    <!-- TextView for displaying added tags -->
+    <LinearLayout
+        android:id="@+id/tagsDisplayLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+        <!-- Dynamically added tags will go here -->
+    </LinearLayout>
+
+    <!-- EditText for diary content -->
+    <EditText
+        android:id="@+id/diaryContentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="Write your diary..."
+        android:padding="12dp"
+        android:gravity="top|start"
+        android:inputType="textMultiLine"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/image_description"
+        android:visibility="gone" />
+
+    <!-- RecyclerView for adding media -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mediaRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        android:scrollbars="vertical" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/addPhotoButton"
+            android:textColor="@android:color/white"
+            android:background="@android:color/black"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Photo"/>
+
+        <Button
+            android:id="@+id/addVideoButton"
+            android:textColor="@android:color/white"
+            android:background="@android:color/black"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add Video"/>
+
+        <Button
+            android:id="@+id/addFileButton"
+            android:textColor="@android:color/white"
+            android:background="@android:color/black"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add File"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <CheckBox
+            android:id="@+id/encryptCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Encrypt" />
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+    <!-- Save button -->
+    <Button
+        android:id="@+id/saveDiaryButton"
+        android:textColor="@android:color/white"
+        android:background="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Diary"
+        android:layout_marginTop="16dp"/>
+
+    <Spinner
+        android:id="@+id/category_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
