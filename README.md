@@ -1,92 +1,133 @@
-# Diary
+# 日记应用（DiaryTest）
 
+本项目是一个基于 Kotlin 的 Android 日记应用，面向日常记录与整理场景，提供“新增-查看-编辑-管理”的完整流程。应用支持图片/视频/文件附件、分类与标签管理，以及字体样式/字号/颜色等个性化设置，并提供“密码保护条目”的访问控制。数据默认本地落地到 SQLite，同时内置实验性 AI 文本润色/摘要入口，便于快速生成当日日记初稿。
 
+## 功能总览
 
-## Getting started
+- **日记记录**：新增、查看、编辑、删除日记条目（标题 + 正文）
+- **分类与标签**：内置分类（Personal / Work / Travel / Study / Other）并支持自定义标签
+- **多媒体附件**：支持图片、视频、文件附件；提供缩略预览与点击查看
+- **搜索**：按标题/正文/标签进行模糊搜索
+- **样式定制**：支持字体样式（正常/加粗/斜体）、字号与颜色
+- **访问保护**：支持为条目设置密码；列表与操作前需校验密码
+- **AI 辅助（实验性）**：基于输入事件生成简短日记摘要，并可一键跳转到新增页继续编辑
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## 主要界面与流程
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- **首页（HomePageActivity）**：入口导航，分别进入“新增日记”“查看日记”“AI 功能”
+- **新增日记（AddDiaryActivity）**：填写标题与正文，选择分类与标签，设置样式，添加多媒体附件与密码保护
+- **日记列表（ViewDiaryActivity）**：列表浏览、搜索、编辑/删除；受保护条目需验证密码
+- **日记详情（DiaryDetailActivity）**：展示内容与附件，按保存的样式进行渲染
+- **编辑日记（EditDiaryActivity）**：修改内容与样式，增删附件，更新密码保护
+- **媒体预览（ImagePreviewActivity）**：图片点击放大预览
+- **AI 功能页（AiFunctionActivity）**：输入要点 -> 生成摘要 -> 一键带入新增日记页
 
-## Add your files
+## 技术栈与依赖
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+- **语言/平台**：Kotlin + Android SDK
+- **UI**：XML 布局 + RecyclerView + Material Components
+- **数据**：SQLiteOpenHelper（本地 SQLite）
+- **图片加载**：Glide
+- **网络**：OkHttp（AI 功能依赖）
+- **AI**：阿里 DashScope SDK（Qwen 模型）
+- **构建**：Gradle (Kotlin DSL)
 
+> SDK 配置：`minSdk=24`，`targetSdk=34`，`compileSdk=34`
+
+## 数据存储与表结构
+
+数据库名称：`DiaryApp.db`，位于应用本地存储。
+
+- **DiaryEntry**
+  - `id`：主键
+  - `title` / `content` / `date`
+  - `font_style` / `font_size` / `color`
+  - `category_id`
+  - `is_protected` / `password`
+- **Media**：`id` / `diaryEntryId` / `uri` / `type`
+- **Tag**：`id` / `name`
+- **EntryTag**：`id` / `entry_id` / `tag_id`
+- **Category**：`id` / `name`（初始化自 `strings.xml`）
+
+## 权限说明
+
+项目在 `AndroidManifest.xml` 中声明了以下权限（实际使用情况以功能为准）：
+
+- **文件/媒体读取**：读取图片、视频与附件 (`READ_MEDIA_*` / `READ_EXTERNAL_STORAGE`)
+- **存储写入**：用于文件处理与持久化 URI 权限（`WRITE_EXTERNAL_STORAGE`，部分版本系统可能忽略）
+- **网络访问**：AI 功能调用外部服务（`INTERNET`）
+- **定位权限**：声明了定位权限，但目前代码中未实际使用
+
+## AI 功能配置（重要）
+
+AI 功能依赖阿里 DashScope SDK（Qwen 模型）。当前代码在 `app/src/main/java/com/example/diarytest/Activity/AiFunctionActivity.kt` 中**硬编码了 API Key**，建议替换为你自己的 Key，并避免提交到仓库。
+
+建议做法：
+
+1. 在本地通过 `local.properties` 或环境变量配置 Key
+2. 在代码中读取配置值（避免硬编码）
+
+## 构建与运行
+
+前置环境：
+
+- JDK 11 或以上
+- Android Studio（或已配置的 Android SDK）
+
+构建 Debug 包：
+
+```bash
+./gradlew assembleDebug
 ```
-cd existing_repo
-git remote add origin https://csgitlab.ucd.ie/team3diary/diary.git
-git branch -M main
-git push -uf origin main
+
+安装到设备/模拟器：
+
+```bash
+./gradlew installDebug
 ```
 
-## Integrate with your tools
+也可直接用 Android Studio 打开项目并运行。
 
-- [ ] [Set up project integrations](https://csgitlab.ucd.ie/team3diary/diary/-/settings/integrations)
+## 测试
 
-## Collaborate with your team
+单元测试：
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+```bash
+./gradlew test
+```
 
-## Test and Deploy
+仪器测试（需设备或模拟器）：
 
-Use the built-in continuous integration in GitLab.
+```bash
+./gradlew connectedAndroidTest
+```
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+测试目录：`app/src/test/java/com/example/diarytest/` 与 `app/src/androidTest/java/com/example/diarytest/`。
 
-***
+## 项目结构（核心文件）
 
-# Editing this README
+- `app/src/main/java/com/example/diarytest/Activity/`
+  - `HomePageActivity.kt`：首页入口
+  - `AddDiaryActivity.kt`：新增日记
+  - `ViewDiaryActivity.kt`：列表/搜索/删除
+  - `DiaryDetailActivity.kt`：详情展示
+  - `EditDiaryActivity.kt`：编辑日记
+  - `AiFunctionActivity.kt`：AI 辅助
+  - `ImagePreviewActivity.kt`：图片预览
+- `app/src/main/java/com/example/diarytest/Database/DiaryDatabaseHelper.kt`：数据库核心逻辑
+- `app/src/main/java/com/example/diarytest/Data/`：数据模型（DiaryEntry / MediaItem / Tag / Category）
+- `app/src/main/java/com/example/diarytest/Adapter/`：RecyclerView 适配器
+- `app/src/main/java/com/example/diarytest/utils/`：工具类（日期格式化、密码加密）
+- `app/src/main/res/layout/`：主要界面布局
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## 使用与注意事项
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- **受保护条目**：仅做访问控制（密码加密存储），内容仍保存在本地数据库中
+- **媒体附件**：使用持久化 URI 权限；删除日记条目不会删除原始文件
+- **标签搜索**：支持按标题/内容/标签模糊查询
 
-## Name
-Choose a self-explaining name for your project.
+## 贡献与许可
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+欢迎提出 Issue 或 PR。请在提交中说明变更意图，并尽量补充测试。
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+当前仓库未包含明确许可证文件，如需开源许可请添加 `LICENSE` 并在此处说明。
