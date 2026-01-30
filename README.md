@@ -60,12 +60,12 @@
 
 ## AI 功能配置（重要）
 
-AI 功能依赖阿里 DashScope SDK（Qwen 模型）。当前代码在 `app/src/main/java/com/example/diarytest/Activity/AiFunctionActivity.kt` 中**硬编码了 API Key**，建议替换为你自己的 Key，并避免提交到仓库。
-
-建议做法：
+AI 功能依赖阿里 DashScope SDK（Qwen 模型）。
 
 1. 在本地通过 `local.properties` 或环境变量配置 Key
 2. 在代码中读取配置值（避免硬编码）
+
+当前项目由于当时Bug问题无奈将API Key硬编码到代码当中，切勿做出类似操作
 
 ## 构建与运行
 
@@ -127,6 +127,8 @@ AI 功能依赖阿里 DashScope SDK（Qwen 模型）。当前代码在 `app/src/
 - **标签搜索**：支持按标题/内容/标签模糊查询
 
 ## 贡献与许可
+
+本项目为小组作业，有共五位贡献者
 
 欢迎提出 Issue 或 PR。请在提交中说明变更意图，并尽量补充测试。
 
